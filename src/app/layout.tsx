@@ -17,10 +17,9 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  // Re-enable userScalable to fix iOS input focus bugs
   userScalable: true,
   viewportFit: "cover",
-  interactiveWidget: "resizes-content",
+  // 移除 interactiveWidget 以避免潛在的 iOS PWA 鍵盤衝突
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#000000" },

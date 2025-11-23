@@ -26,22 +26,22 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+  /* 移除全域 touch-action 強制，避免副作用 */
+  /* touch-action: manipulation; */
   -webkit-user-select: auto;
   user-select: auto;
 }
 
-/* PWA Input Fixes for iOS - Ultimate Fix */
+/* PWA Input Fixes for iOS - Simplified */
 input, textarea, button, a {
-  /* 關鍵：確保所有交互元件都能接收事件 */
   pointer-events: auto !important;
-  cursor: text; /* 提示瀏覽器這是文本區域 */
   
-  -webkit-user-select: text !important;
-  user-select: text !important;
+  /* 恢復 auto，不要強制 text，這對 input 來說才是正確的 */
+  -webkit-user-select: auto !important;
+  user-select: auto !important;
   
-  touch-action: manipulation !important;
-  -webkit-touch-callout: default !important;
+  /* 移除強制 touch-action，讓瀏覽器處理 focus */
+  /* touch-action: manipulation !important; */
   
   -webkit-appearance: none;
   appearance: none;
@@ -51,7 +51,6 @@ input, textarea, button, a {
   }
 }
 
-/* 確保容器不擋住點擊 */
 main {
   pointer-events: auto !important;
   position: relative;
