@@ -17,8 +17,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  // 移除 userScalable: false，這常常是 iOS PWA 輸入框失效的主因
+  // Re-enable userScalable to fix iOS input focus bugs
+  userScalable: true,
   viewportFit: "cover",
+  interactiveWidget: "resizes-content",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#000000" },

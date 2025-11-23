@@ -26,24 +26,27 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-tap-highlight-color: transparent;
-  /* 確保 Body 本身是可互動的 */
+  /* Ensure Body itself is interactive */
   touch-action: manipulation;
+  -webkit-user-select: auto;
+  user-select: auto;
 }
 
-/* PWA Input Fixes for iOS - 強制修正 */
+/* PWA Input Fixes for iOS - Forced Fixes */
 input, textarea {
-  /* 關鍵修正：允許操作與選取 */
+  /* Critical Fix: Allow operation and selection */
   -webkit-user-select: text !important;
   user-select: text !important;
   
-  /* 關鍵修正：告知瀏覽器這是可點擊操作的區域 */
+  /* Critical Fix: Tell browser this is a clickable/interactive area */
   touch-action: manipulation !important;
+  -webkit-touch-callout: default !important;
   
-  /* 避免 iOS 預設外觀干擾 */
+  /* Avoid iOS default appearance interference */
   -webkit-appearance: none;
   appearance: none;
 
-  /* 防止縮放 */
+  /* Prevent zooming */
   @media (max-width: 768px) {
     font-size: 16px !important;
   }
