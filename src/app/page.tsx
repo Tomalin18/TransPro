@@ -183,6 +183,11 @@ export default function Home() {
                   type="password"
                   value={apiKey}
                   onChange={handleApiKeyChange}
+                  onClick={(e) => e.currentTarget.focus()}
+                  onTouchEnd={(e) => {
+                    // Prevent accidental double firing but ensure focus
+                    // e.stopPropagation();
+                  }}
                   placeholder="sk-..."
                   className="w-full p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent outline-none transition text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
                  />
@@ -259,7 +264,7 @@ export default function Home() {
         </div>
       )}
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-0">
         {/* 單欄輸入區 */}
         <div className="space-y-6">
           <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 h-fit">
@@ -272,6 +277,10 @@ export default function Home() {
                   type="text"
                   value={industryContext}
                   onChange={(e) => setIndustryContext(e.target.value)}
+                  onClick={(e) => e.currentTarget.focus()}
+                  onTouchEnd={(e) => {
+                    // e.stopPropagation();
+                  }}
                   placeholder="例如：醫學、法律、遊戲在地化..."
                   className="w-full p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 outline-none transition text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
                 />
@@ -284,6 +293,10 @@ export default function Home() {
                 <textarea
                   value={sourceText}
                   onChange={(e) => setSourceText(e.target.value)}
+                  onClick={(e) => e.currentTarget.focus()}
+                  onTouchEnd={(e) => {
+                    // e.stopPropagation();
+                  }}
                   placeholder="請輸入中文、英文或日文..."
                   className="w-full h-48 p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 outline-none transition resize-none text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
                 />
