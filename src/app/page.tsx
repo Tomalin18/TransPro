@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Book, Globe, Save, Sparkles, Copy, Check, Trash2, History, X } from "lucide-react";
+import { Book, Globe, Save, Sparkles, Copy, Check, Trash2, History, X, Settings } from "lucide-react";
 import { translateText, TranslationData } from "@/actions/translate";
 
 interface FavoriteItem {
@@ -22,9 +22,10 @@ export default function Home() {
   const [translations, setTranslations] = useState<TranslationData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 收藏狀態
+  // 收藏與設定狀態
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   // 初始化：讀取 LocalStorage
   useEffect(() => {
@@ -51,7 +52,8 @@ export default function Home() {
   // 翻譯功能
   const handleTranslate = async () => {
     if (!apiKey) {
-      alert("請輸入 OpenAI API Key");
+      setShowSettings(true); // 如果沒有 Key，自動打開設定
+      alert("請先設定 OpenAI API Key");
       return;
     }
     if (!sourceText) return;
@@ -121,15 +123,75 @@ export default function Home() {
             <Globe className="w-6 h-6 text-blue-600" />
             <h1 className="text-xl font-bold text-gray-900">TransPro 翻譯助手</h1>
           </div>
-          <button 
-            onClick={() => setShowFavorites(!showFavorites)}
-            className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition px-3 py-2 rounded-lg hover:bg-gray-100"
-          >
-            <History className="w-5 h-5" />
-            <span className="hidden sm:inline">我的收藏 ({favorites.length})</span>
-          </button>
+          <div className="flex items-center gap-2">
+             <button 
+              onClick={() => setShowFavorites(!showFavorites)}
+              className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition px-3 py-2 rounded-lg hover:bg-gray-100"
+            >
+              <History className="w-5 h-5" />
+              <span className="hidden sm:inline">收藏 ({favorites.length})</span>
+            </button>
+            <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:block"></div>
+            <button 
+              onClick={() => setShowSettings(true)}
+              className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition px-3 py-2 rounded-lg hover:bg-gray-100"
+              title="API 設定"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </header>
+
+      {/* 設定 Dialog */}
+      {showSettings && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+           {/* 背景遮罩 */}
+           <div 
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm animate-in fade-in"
+            onClick={() => setShowSettings(false)}
+          />
+          
+          {/* Dialog 內容 */}
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative z-10 animate-in zoom-in-95 duration-200">
+             <div className="flex justify-between items-center mb-6">
+               <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                 <Settings className="w-6 h-6 text-blue-600" /> 設定
+               </h2>
+               <button onClick={() => setShowSettings(false)} className="p-2 hover:bg-gray-100 rounded-full text-gray-500">
+                 <X className="w-5 h-5" />
+               </button>
+             </div>
+             
+             <div className="space-y-4">
+               <div>
+                 <label className="block text-sm font-medium text-gray-700 mb-2">
+                  OpenAI API Key
+                 </label>
+                 <input
+                  type="password"
+                  value={apiKey}
+                  onChange={handleApiKeyChange}
+                  placeholder="sk-..."
+                  className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                 />
+                 <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                  您的 Key 僅會儲存在本地瀏覽器 (LocalStorage)，直接與 OpenAI 伺服器通訊，不會上傳至我們的後端伺服器。
+                 </p>
+               </div>
+               
+               <div className="pt-2 flex justify-end">
+                 <button 
+                   onClick={() => setShowSettings(false)}
+                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+                 >
+                   完成
+                 </button>
+               </div>
+             </div>
+          </div>
+        </div>
+      )}
 
       {/* 收藏列表側邊欄 (Drawer) */}
       {showFavorites && (
@@ -192,22 +254,7 @@ export default function Home() {
           {/* 左側：輸入區 (佔 5/12) */}
           <div className="lg:col-span-5 space-y-6">
             
-            {/* API Key 設定 */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                OpenAI API Key
-              </label>
-              <input
-                type="password"
-                value={apiKey}
-                onChange={handleApiKeyChange}
-                placeholder="sk-..."
-                className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              />
-              <p className="text-xs text-gray-500 mt-2">
-                您的 Key 僅會儲存在本地瀏覽器，不會上傳至我們的伺服器。
-              </p>
-            </div>
+            {/* 移除原本的 API Key 設定區塊 */}
 
             {/* 翻譯輸入 */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-fit">
