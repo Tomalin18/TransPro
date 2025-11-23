@@ -23,6 +23,9 @@ export default function Home() {
   const [translations, setTranslations] = useState<TranslationData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showResultDrawer, setShowResultDrawer] = useState(false);
+  
+  // Tab 狀態 (提升到這裡以便連動名詞解釋)
+  const [resultTab, setResultTab] = useState<'zh' | 'en' | 'ja'>('zh');
 
   // 收藏與設定狀態
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
@@ -350,14 +353,27 @@ export default function Home() {
             
             {/* Drawer Body */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-               <UnifiedResultCard data={translations} />
+               <UnifiedResultCard 
+                data={translations} 
+                activeTab={resultTab}
+                setActiveTab={setResultTab}
+               />
                 
                <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-xl border border-zinc-200 dark:border-zinc-800">
                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
                    <Book className="w-5 h-5" /> 名詞解釋 & 背景知識
+                   <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400 ml-2 px-2 py-0.5 bg-zinc-200 dark:bg-zinc-800 rounded">
+                     {resultTab === 'zh' ? '繁體中文' : resultTab === 'en' ? 'English' : '日本語'}
+                   </span>
                  </h3>
-                 <div className="prose prose-zinc dark:prose-invert max-w-none whitespace-pre-wrap text-zinc-800 dark:text-zinc-300 leading-relaxed">
-                   {translations.terms}
+                 <div 
+                  key={resultTab} // 觸發動畫
+                  className="prose prose-zinc dark:prose-invert max-w-none whitespace-pre-wrap text-zinc-800 dark:text-zinc-300 leading-relaxed animate-in fade-in duration-300"
+                 >
+                   {typeof translations.terms === 'string' 
+                     ? translations.terms // 向下相容舊資料 (如果 localStorage 有舊格式)
+                     : translations.terms[resultTab] // 顯示對應語言的名詞解釋
+                   }
                  </div>
                </div>
             </div>
@@ -369,8 +385,15 @@ export default function Home() {
 }
 
 // 整合型顯示卡片 (含 Tab 切換)
-function UnifiedResultCard({ data }: { data: TranslationData }) {
-  const [activeTab, setActiveTab] = useState<'zh' | 'en' | 'ja'>('zh');
+function UnifiedResultCard({ 
+  data, 
+  activeTab, 
+  setActiveTab 
+}: { 
+  data: TranslationData; 
+  activeTab: 'zh' | 'en' | 'ja';
+  setActiveTab: (tab: 'zh' | 'en' | 'ja') => void;
+}) {
   const [copied, setCopied] = useState(false);
 
   const getContent = () => {
