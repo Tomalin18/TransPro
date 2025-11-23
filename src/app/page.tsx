@@ -124,7 +124,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 relative transition-colors duration-300 pb-24">
       {/* Header */}
-      <header className="bg-white dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-10">
+      <header className="bg-white dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Globe className="w-6 h-6 text-zinc-900 dark:text-zinc-100" />
@@ -156,7 +156,7 @@ export default function Home() {
 
       {/* 設定 Dialog */}
       {showSettings && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ touchAction: 'none' }}>
            {/* 背景遮罩 */}
            <div 
             className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in"
@@ -183,11 +183,6 @@ export default function Home() {
                   type="password"
                   value={apiKey}
                   onChange={handleApiKeyChange}
-                  onClick={(e) => e.currentTarget.focus()}
-                  onTouchEnd={(e) => {
-                    // Prevent accidental double firing but ensure focus
-                    // e.stopPropagation();
-                  }}
                   placeholder="sk-..."
                   className="w-full p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent outline-none transition text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
                  />
@@ -211,7 +206,7 @@ export default function Home() {
 
       {/* 收藏列表側邊欄 (Drawer) */}
       {showFavorites && (
-        <div className="fixed inset-0 z-50 flex justify-end">
+        <div className="fixed inset-0 z-50 flex justify-end" style={{ touchAction: 'pan-y' }}>
           {/* 背景遮罩 */}
           <div 
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
@@ -264,7 +259,7 @@ export default function Home() {
         </div>
       )}
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-0">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         {/* 單欄輸入區 */}
         <div className="space-y-6">
           <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 h-fit">
@@ -277,10 +272,6 @@ export default function Home() {
                   type="text"
                   value={industryContext}
                   onChange={(e) => setIndustryContext(e.target.value)}
-                  onClick={(e) => e.currentTarget.focus()}
-                  onTouchEnd={(e) => {
-                    // e.stopPropagation();
-                  }}
                   placeholder="例如：醫學、法律、遊戲在地化..."
                   className="w-full p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 outline-none transition text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
                 />
@@ -293,10 +284,6 @@ export default function Home() {
                 <textarea
                   value={sourceText}
                   onChange={(e) => setSourceText(e.target.value)}
-                  onClick={(e) => e.currentTarget.focus()}
-                  onTouchEnd={(e) => {
-                    // e.stopPropagation();
-                  }}
                   placeholder="請輸入中文、英文或日文..."
                   className="w-full h-48 p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 outline-none transition resize-none text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
                 />
@@ -324,7 +311,7 @@ export default function Home() {
 
       {/* 重新打開結果的浮動按鈕 (當有結果但抽屜被關閉時顯示) */}
       {translations && !showResultDrawer && (
-        <div className="fixed bottom-8 right-8 z-40 animate-in zoom-in">
+        <div className="fixed bottom-8 right-8 z-40 animate-in zoom-in pointer-events-auto">
           <button
             onClick={() => setShowResultDrawer(true)}
             className="flex items-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-5 py-3 rounded-full shadow-xl hover:scale-105 transition-transform font-medium"
@@ -337,7 +324,7 @@ export default function Home() {
 
       {/* 結果抽屜 (Bottom Drawer) */}
       {showResultDrawer && translations && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center">
+        <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ touchAction: 'none' }}>
           {/* 背景遮罩 */}
           <div 
             className="absolute inset-0 bg-black/20 backdrop-blur-sm animate-in fade-in"
@@ -345,7 +332,10 @@ export default function Home() {
           />
           
           {/* Drawer 內容 */}
-          <div className="bg-white dark:bg-zinc-900 w-full max-w-4xl rounded-t-2xl shadow-2xl border-t border-zinc-200 dark:border-zinc-800 max-h-[85vh] flex flex-col relative z-10 animate-in slide-in-from-bottom duration-300">
+          <div 
+            className="bg-white dark:bg-zinc-900 w-full max-w-4xl rounded-t-2xl shadow-2xl border-t border-zinc-200 dark:border-zinc-800 max-h-[85vh] flex flex-col relative z-10 animate-in slide-in-from-bottom duration-300"
+            style={{ touchAction: 'pan-y' }}
+          >
             {/* Drawer Handle / Header */}
             <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/50 rounded-t-2xl sticky top-0 z-20">
               <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
