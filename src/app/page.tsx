@@ -198,27 +198,27 @@ export default function Home() {
         </div>
       )}
 
-      {/* 收藏列表側邊欄 (Drawer) */}
+      {/* 收藏列表 Dialog */}
       {showFavorites && (
-        <div className="fixed inset-0 z-50 flex justify-end">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* 背景遮罩 */}
           <div 
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in"
             onClick={() => setShowFavorites(false)}
           />
           
-          {/* 側邊欄內容 */}
-          <div className="relative w-full max-w-md bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800 h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-            <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/50">
-              <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Save className="w-5 h-5 text-zinc-900 dark:text-white" /> 我的收藏
+          {/* Dialog 內容 */}
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col relative z-10 animate-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                <Save className="w-6 h-6 text-zinc-900 dark:text-white" /> 我的收藏
               </h2>
-              <button onClick={() => setShowFavorites(false)} className="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-full text-zinc-500 dark:text-zinc-400">
+              <button onClick={() => setShowFavorites(false)} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full text-zinc-500 dark:text-zinc-400 transition">
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {favorites.length === 0 ? (
                 <div className="text-center text-zinc-400 dark:text-zinc-600 py-10">
                   暫無收藏內容
@@ -228,20 +228,21 @@ export default function Home() {
                   <div 
                     key={item.id}
                     onClick={() => handleLoadFavorite(item)}
-                    className="group bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 hover:border-zinc-400 dark:hover:border-zinc-600 hover:shadow-md transition cursor-pointer relative"
+                    className="group bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 hover:border-zinc-400 dark:hover:border-zinc-600 hover:shadow-md transition cursor-pointer relative"
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded">
+                      <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 bg-white dark:bg-zinc-900 px-2 py-1 rounded border border-zinc-200 dark:border-zinc-800">
                         {new Date(item.timestamp).toLocaleDateString()}
                       </span>
                       <button 
                         onClick={(e) => handleDeleteFavorite(item.id, e)}
                         className="text-zinc-400 hover:text-red-500 p-1 rounded opacity-0 group-hover:opacity-100 transition"
+                        title="刪除收藏"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                    <p className="font-medium text-zinc-800 dark:text-zinc-200 line-clamp-2 mb-2">{item.source}</p>
+                    <p className="font-medium text-zinc-900 dark:text-zinc-100 line-clamp-2 mb-2">{item.source}</p>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1">
                        {item.context ? `[${item.context}]` : '[無背景]'} • {item.result.zh.substring(0, 20)}...
                     </p>
