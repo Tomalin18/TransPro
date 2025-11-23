@@ -17,7 +17,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false,
+  // 移除 userScalable: false，這常常是 iOS PWA 輸入框失效的主因
   viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/file.svg",
-    apple: "/icon-192.png", // 加入 Apple Touch Icon 連結
+    apple: "/icon-192.png",
   },
 };
 

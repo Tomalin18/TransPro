@@ -25,14 +25,25 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  -webkit-tap-highlight-color: transparent; /* 移除移動端點擊高亮 */
+  -webkit-tap-highlight-color: transparent;
+  /* 確保 Body 本身是可互動的 */
+  touch-action: manipulation;
 }
 
-/* PWA Input Fixes for iOS */
+/* PWA Input Fixes for iOS - 強制修正 */
 input, textarea {
+  /* 關鍵修正：允許操作與選取 */
   -webkit-user-select: text !important;
   user-select: text !important;
-  /* Ensure font size is at least 16px on mobile to prevent zooming */
+  
+  /* 關鍵修正：告知瀏覽器這是可點擊操作的區域 */
+  touch-action: manipulation !important;
+  
+  /* 避免 iOS 預設外觀干擾 */
+  -webkit-appearance: none;
+  appearance: none;
+
+  /* 防止縮放 */
   @media (max-width: 768px) {
     font-size: 16px !important;
   }
