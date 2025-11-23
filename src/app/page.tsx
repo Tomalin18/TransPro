@@ -273,9 +273,7 @@ export default function Home() {
 
             {translations && !isLoading && (
               <>
-                <ResultCard title="中文翻譯" content={translations.zh} lang="zh" />
-                <ResultCard title="英文翻譯" content={translations.en} lang="en" />
-                <ResultCard title="日文翻譯" content={translations.ja} lang="ja" />
+                <UnifiedResultCard data={translations} />
                 
                 <div className="bg-amber-50 p-6 rounded-xl border border-amber-100">
                   <h3 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
@@ -303,30 +301,78 @@ export default function Home() {
   );
 }
 
-// 子元件：顯示卡片
-function ResultCard({ title, content, lang }: { title: string; content: string; lang: string }) {
+// 整合型顯示卡片 (含 Tab 切換)
+function UnifiedResultCard({ data }: { data: TranslationData }) {
+  const [activeTab, setActiveTab] = useState<'zh' | 'en' | 'ja'>('zh');
   const [copied, setCopied] = useState(false);
 
+  const getContent = () => {
+    switch (activeTab) {
+      case 'zh': return data.zh;
+      case 'en': return data.en;
+      case 'ja': return data.ja;
+      default: return data.zh;
+    }
+  };
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(content);
+    navigator.clipboard.writeText(getContent());
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
-      <div className="flex justify-between items-start mb-3">
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">{title}</h3>
-        <button 
-          onClick={handleCopy}
-          className="text-gray-400 hover:text-blue-600 transition p-1"
-          title="複製內容"
-        >
-          {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-        </button>
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition min-h-[200px]">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">翻譯結果</h3>
+        
+        {/* 右上角控制區：Tabs + Copy */}
+        <div className="flex items-center gap-3 bg-gray-50 p-1 rounded-lg border border-gray-200">
+          <div className="flex gap-1">
+            <button
+              onClick={() => setActiveTab('zh')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
+                activeTab === 'zh' 
+                  ? 'bg-white text-blue-600 shadow-sm' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              繁體中文
+            </button>
+            <button
+              onClick={() => setActiveTab('en')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
+                activeTab === 'en' 
+                  ? 'bg-white text-blue-600 shadow-sm' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              English
+            </button>
+            <button
+              onClick={() => setActiveTab('ja')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
+                activeTab === 'ja' 
+                  ? 'bg-white text-blue-600 shadow-sm' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              日本語
+            </button>
+          </div>
+          <div className="w-px h-4 bg-gray-300 mx-1"></div>
+          <button 
+            onClick={handleCopy}
+            className="text-gray-400 hover:text-blue-600 transition p-1 mr-1"
+            title="複製當前內容"
+          >
+            {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+          </button>
+        </div>
       </div>
-      <div className="text-lg text-gray-800 leading-relaxed whitespace-pre-wrap">
-        {content}
+      
+      <div className="text-lg text-gray-800 leading-relaxed whitespace-pre-wrap animate-in fade-in duration-300 key={activeTab}">
+        {getContent()}
       </div>
     </div>
   );
