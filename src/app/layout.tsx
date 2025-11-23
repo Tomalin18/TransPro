@@ -17,9 +17,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  userScalable: true,
-  viewportFit: "cover",
-  // 移除 interactiveWidget 以避免潛在的 iOS PWA 鍵盤衝突
+  userScalable: false,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#000000" },

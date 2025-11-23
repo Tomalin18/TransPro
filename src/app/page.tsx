@@ -156,7 +156,7 @@ export default function Home() {
 
       {/* 設定 Dialog */}
       {showSettings && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ touchAction: 'none' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
            {/* 背景遮罩 */}
            <div 
             className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in"
@@ -181,6 +181,9 @@ export default function Home() {
                  </label>
                  <input
                   type="password"
+                  inputMode="text"
+                  autoComplete="off"
+                  autoCorrect="off"
                   value={apiKey}
                   onChange={handleApiKeyChange}
                   placeholder="sk-..."
@@ -206,7 +209,7 @@ export default function Home() {
 
       {/* 收藏列表側邊欄 (Drawer) */}
       {showFavorites && (
-        <div className="fixed inset-0 z-50 flex justify-end" style={{ touchAction: 'pan-y' }}>
+        <div className="fixed inset-0 z-50 flex justify-end">
           {/* 背景遮罩 */}
           <div 
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
@@ -270,6 +273,9 @@ export default function Home() {
                 </label>
                 <input
                   type="text"
+                  inputMode="text"
+                  autoComplete="off"
+                  autoCorrect="off"
                   value={industryContext}
                   onChange={(e) => setIndustryContext(e.target.value)}
                   placeholder="例如：醫學、法律、遊戲在地化..."
@@ -282,6 +288,9 @@ export default function Home() {
                   欲翻譯內容
                 </label>
                 <textarea
+                  inputMode="text"
+                  autoComplete="off"
+                  autoCorrect="off"
                   value={sourceText}
                   onChange={(e) => setSourceText(e.target.value)}
                   placeholder="請輸入中文、英文或日文..."
@@ -324,7 +333,7 @@ export default function Home() {
 
       {/* 結果抽屜 (Bottom Drawer) */}
       {showResultDrawer && translations && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ touchAction: 'none' }}>
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
           {/* 背景遮罩 */}
           <div 
             className="absolute inset-0 bg-black/20 backdrop-blur-sm animate-in fade-in"
@@ -334,7 +343,6 @@ export default function Home() {
           {/* Drawer 內容 */}
           <div 
             className="bg-white dark:bg-zinc-900 w-full max-w-4xl rounded-t-2xl shadow-2xl border-t border-zinc-200 dark:border-zinc-800 max-h-[85vh] flex flex-col relative z-10 animate-in slide-in-from-bottom duration-300"
-            style={{ touchAction: 'pan-y' }}
           >
             {/* Drawer Handle / Header */}
             <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/50 rounded-t-2xl sticky top-0 z-20">
