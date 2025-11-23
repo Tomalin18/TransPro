@@ -17,6 +17,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#000000" },
@@ -27,8 +29,14 @@ export const metadata: Metadata = {
   title: "TransPro 翻譯助手",
   description: "專業翻譯人員的最佳夥伴，提供精準翻譯與產業背景知識",
   manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "TransPro",
+  },
   icons: {
     icon: "/file.svg",
+    apple: "/icon-192.png", // 加入 Apple Touch Icon 連結
   },
 };
 
