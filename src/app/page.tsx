@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Book, Globe, Save, Sparkles, Copy, Check, Trash2, History, X, Settings } from "lucide-react";
+import { Book, Globe, Save, Sparkles, Copy, Check, Trash2, History, X, Settings, ChevronUp } from "lucide-react";
 import { translateText, TranslationData } from "@/actions/translate";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -22,6 +22,7 @@ export default function Home() {
   // 輸出狀態
   const [translations, setTranslations] = useState<TranslationData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showResultDrawer, setShowResultDrawer] = useState(false);
 
   // 收藏與設定狀態
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
@@ -61,12 +62,14 @@ export default function Home() {
 
     setIsLoading(true);
     setTranslations(null);
+    setShowResultDrawer(false);
 
     try {
       const result = await translateText(apiKey, sourceText, industryContext);
       
       if (result.success && result.data) {
         setTranslations(result.data);
+        setShowResultDrawer(true); // 翻譯成功後打開抽屜
       } else {
         alert(result.error || "翻譯發生錯誤，請檢查 API Key 或網路連線");
       }
@@ -112,11 +115,11 @@ export default function Home() {
     setIndustryContext(item.context);
     setTranslations(item.result);
     setShowFavorites(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setShowResultDrawer(true); // 載入收藏後直接打開結果
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 relative transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 relative transition-colors duration-300 pb-24">
       {/* Header */}
       <header className="bg-white dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -198,27 +201,27 @@ export default function Home() {
         </div>
       )}
 
-      {/* 收藏列表 Dialog */}
+      {/* 收藏列表側邊欄 (Drawer) */}
       {showFavorites && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex justify-end">
           {/* 背景遮罩 */}
           <div 
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setShowFavorites(false)}
           />
           
-          {/* Dialog 內容 */}
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col relative z-10 animate-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                <Save className="w-6 h-6 text-zinc-900 dark:text-white" /> 我的收藏
+          {/* 側邊欄內容 */}
+          <div className="relative w-full max-w-md bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800 h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+            <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/50">
+              <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                <Save className="w-5 h-5 text-zinc-900 dark:text-white" /> 我的收藏
               </h2>
-              <button onClick={() => setShowFavorites(false)} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full text-zinc-500 dark:text-zinc-400 transition">
+              <button onClick={() => setShowFavorites(false)} className="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-full text-zinc-500 dark:text-zinc-400">
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {favorites.length === 0 ? (
                 <div className="text-center text-zinc-400 dark:text-zinc-600 py-10">
                   暫無收藏內容
@@ -228,21 +231,20 @@ export default function Home() {
                   <div 
                     key={item.id}
                     onClick={() => handleLoadFavorite(item)}
-                    className="group bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 hover:border-zinc-400 dark:hover:border-zinc-600 hover:shadow-md transition cursor-pointer relative"
+                    className="group bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 hover:border-zinc-400 dark:hover:border-zinc-600 hover:shadow-md transition cursor-pointer relative"
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 bg-white dark:bg-zinc-900 px-2 py-1 rounded border border-zinc-200 dark:border-zinc-800">
+                      <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded">
                         {new Date(item.timestamp).toLocaleDateString()}
                       </span>
                       <button 
                         onClick={(e) => handleDeleteFavorite(item.id, e)}
                         className="text-zinc-400 hover:text-red-500 p-1 rounded opacity-0 group-hover:opacity-100 transition"
-                        title="刪除收藏"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                    <p className="font-medium text-zinc-900 dark:text-zinc-100 line-clamp-2 mb-2">{item.source}</p>
+                    <p className="font-medium text-zinc-800 dark:text-zinc-200 line-clamp-2 mb-2">{item.source}</p>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1">
                        {item.context ? `[${item.context}]` : '[無背景]'} • {item.result.zh.substring(0, 20)}...
                     </p>
@@ -254,100 +256,114 @@ export default function Home() {
         </div>
       )}
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
-          {/* 左側：輸入區 (佔 5/12) */}
-          <div className="lg:col-span-5 space-y-6">
-            
-            {/* 翻譯輸入 */}
-            <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 h-fit">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
-                    產業背景 / 上下文
-                  </label>
-                  <input
-                    type="text"
-                    value={industryContext}
-                    onChange={(e) => setIndustryContext(e.target.value)}
-                    placeholder="例如：醫學、法律、遊戲在地化..."
-                    className="w-full p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 outline-none transition text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
-                    欲翻譯內容
-                  </label>
-                  <textarea
-                    value={sourceText}
-                    onChange={(e) => setSourceText(e.target.value)}
-                    placeholder="請輸入中文、英文或日文..."
-                    className="w-full h-48 p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 outline-none transition resize-none text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
-                  />
-                </div>
-
-                <button
-                  onClick={handleTranslate}
-                  disabled={isLoading || !sourceText}
-                  className="w-full bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
-                >
-                  {isLoading ? (
-                    <>
-                      <span className="animate-spin">⌛</span> 翻譯中...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-5 h-5" /> 開始翻譯
-                    </>
-                  )}
-                </button>
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* 單欄輸入區 */}
+        <div className="space-y-6">
+          <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 h-fit">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                  產業背景 / 上下文
+                </label>
+                <input
+                  type="text"
+                  value={industryContext}
+                  onChange={(e) => setIndustryContext(e.target.value)}
+                  placeholder="例如：醫學、法律、遊戲在地化..."
+                  className="w-full p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 outline-none transition text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
+                />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                  欲翻譯內容
+                </label>
+                <textarea
+                  value={sourceText}
+                  onChange={(e) => setSourceText(e.target.value)}
+                  placeholder="請輸入中文、英文或日文..."
+                  className="w-full h-48 p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 outline-none transition resize-none text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
+                />
+              </div>
+
+              <button
+                onClick={handleTranslate}
+                disabled={isLoading || !sourceText}
+                className="w-full bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+              >
+                {isLoading ? (
+                  <>
+                    <span className="animate-spin">⌛</span> 翻譯中...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-5 h-5" /> 開始翻譯
+                  </>
+                )}
+              </button>
             </div>
-          </div>
-
-          {/* 右側：輸出區 (佔 7/12) */}
-          <div className="lg:col-span-7 space-y-6">
-            {!translations && !isLoading && (
-              <div className="h-full flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-600 min-h-[400px] bg-white dark:bg-zinc-900 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700">
-                <Book className="w-12 h-12 mb-4 opacity-20" />
-                <p>輸入內容並開始翻譯，結果將顯示於此</p>
-              </div>
-            )}
-
-            {isLoading && (
-              <div className="h-full flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-600 min-h-[400px] bg-white dark:bg-zinc-900 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700">
-                 <span className="animate-pulse">正在思考翻譯與術語解釋...</span>
-              </div>
-            )}
-
-            {translations && !isLoading && (
-              <>
-                <UnifiedResultCard data={translations} />
-                
-                <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-xl border border-zinc-200 dark:border-zinc-800">
-                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
-                    <Book className="w-5 h-5" /> 名詞解釋 & 背景知識
-                  </h3>
-                  <div className="prose prose-zinc dark:prose-invert max-w-none whitespace-pre-wrap text-zinc-800 dark:text-zinc-300 leading-relaxed">
-                    {translations.terms}
-                  </div>
-                </div>
-
-                <div className="flex justify-end pt-4">
-                  <button 
-                    onClick={handleSaveFavorite}
-                    className="flex items-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-6 py-2 rounded-full hover:bg-zinc-800 dark:hover:bg-zinc-200 transition shadow-lg active:scale-95 font-medium"
-                  >
-                    <Save className="w-4 h-4" /> 加入收藏
-                  </button>
-                </div>
-              </>
-            )}
           </div>
         </div>
       </main>
+
+      {/* 重新打開結果的浮動按鈕 (當有結果但抽屜被關閉時顯示) */}
+      {translations && !showResultDrawer && (
+        <div className="fixed bottom-8 right-8 z-40 animate-in zoom-in">
+          <button
+            onClick={() => setShowResultDrawer(true)}
+            className="flex items-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-5 py-3 rounded-full shadow-xl hover:scale-105 transition-transform font-medium"
+          >
+            <ChevronUp className="w-5 h-5" />
+            查看結果
+          </button>
+        </div>
+      )}
+
+      {/* 結果抽屜 (Bottom Drawer) */}
+      {showResultDrawer && translations && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          {/* 背景遮罩 */}
+          <div 
+            className="absolute inset-0 bg-black/20 backdrop-blur-sm animate-in fade-in"
+            onClick={() => setShowResultDrawer(false)}
+          />
+          
+          {/* Drawer 內容 */}
+          <div className="bg-white dark:bg-zinc-900 w-full max-w-4xl rounded-t-2xl shadow-2xl border-t border-zinc-200 dark:border-zinc-800 max-h-[85vh] flex flex-col relative z-10 animate-in slide-in-from-bottom duration-300">
+            {/* Drawer Handle / Header */}
+            <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/50 rounded-t-2xl sticky top-0 z-20">
+              <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-zinc-900 dark:text-white" /> 翻譯結果
+              </h2>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={handleSaveFavorite}
+                  className="flex items-center gap-1.5 text-sm bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-1.5 rounded-full hover:opacity-90 transition"
+                >
+                  <Save className="w-4 h-4" /> 收藏
+                </button>
+                <button onClick={() => setShowResultDrawer(false)} className="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-full text-zinc-500 dark:text-zinc-400">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Drawer Body */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+               <UnifiedResultCard data={translations} />
+                
+               <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                 <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
+                   <Book className="w-5 h-5" /> 名詞解釋 & 背景知識
+                 </h3>
+                 <div className="prose prose-zinc dark:prose-invert max-w-none whitespace-pre-wrap text-zinc-800 dark:text-zinc-300 leading-relaxed">
+                   {translations.terms}
+                 </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
