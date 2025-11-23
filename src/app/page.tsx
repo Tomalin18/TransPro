@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Book, Globe, Save, Sparkles, Copy, Check, Trash2, History, X, Settings } from "lucide-react";
 import { translateText, TranslationData } from "@/actions/translate";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface FavoriteItem {
   id: string;
@@ -115,26 +116,30 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 relative">
+    <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 relative transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+      <header className="bg-white dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Globe className="w-6 h-6 text-blue-600" />
-            <h1 className="text-xl font-bold text-gray-900">TransPro 翻譯助手</h1>
+            <Globe className="w-6 h-6 text-zinc-900 dark:text-zinc-100" />
+            <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">TransPro</h1>
           </div>
           <div className="flex items-center gap-2">
              <button 
               onClick={() => setShowFavorites(!showFavorites)}
-              className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition px-3 py-2 rounded-lg hover:bg-gray-100"
+              className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
             >
               <History className="w-5 h-5" />
               <span className="hidden sm:inline">收藏 ({favorites.length})</span>
             </button>
-            <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:block"></div>
+            
+            <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-1 hidden sm:block"></div>
+            
+            <ThemeToggle />
+
             <button 
               onClick={() => setShowSettings(true)}
-              className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition px-3 py-2 rounded-lg hover:bg-gray-100"
+              className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
               title="API 設定"
             >
               <Settings className="w-5 h-5" />
@@ -148,24 +153,24 @@ export default function Home() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
            {/* 背景遮罩 */}
            <div 
-            className="absolute inset-0 bg-black/30 backdrop-blur-sm animate-in fade-in"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in"
             onClick={() => setShowSettings(false)}
           />
           
           {/* Dialog 內容 */}
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative z-10 animate-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl w-full max-w-md p-6 relative z-10 animate-in zoom-in-95 duration-200">
              <div className="flex justify-between items-center mb-6">
-               <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                 <Settings className="w-6 h-6 text-blue-600" /> 設定
+               <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                 <Settings className="w-6 h-6 text-zinc-900 dark:text-white" /> 設定
                </h2>
-               <button onClick={() => setShowSettings(false)} className="p-2 hover:bg-gray-100 rounded-full text-gray-500">
+               <button onClick={() => setShowSettings(false)} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full text-zinc-500 dark:text-zinc-400">
                  <X className="w-5 h-5" />
                </button>
              </div>
              
              <div className="space-y-4">
                <div>
-                 <label className="block text-sm font-medium text-gray-700 mb-2">
+                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                   OpenAI API Key
                  </label>
                  <input
@@ -173,9 +178,9 @@ export default function Home() {
                   value={apiKey}
                   onChange={handleApiKeyChange}
                   placeholder="sk-..."
-                  className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className="w-full p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 focus:border-transparent outline-none transition text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
                  />
-                 <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                 <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 leading-relaxed">
                   您的 Key 僅會儲存在本地瀏覽器 (LocalStorage)，直接與 OpenAI 伺服器通訊，不會上傳至我們的後端伺服器。
                  </p>
                </div>
@@ -183,7 +188,7 @@ export default function Home() {
                <div className="pt-2 flex justify-end">
                  <button 
                    onClick={() => setShowSettings(false)}
-                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+                   className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-6 py-2 rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 transition font-medium"
                  >
                    完成
                  </button>
@@ -198,24 +203,24 @@ export default function Home() {
         <div className="fixed inset-0 z-50 flex justify-end">
           {/* 背景遮罩 */}
           <div 
-            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setShowFavorites(false)}
           />
           
           {/* 側邊欄內容 */}
-          <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
-              <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                <Save className="w-5 h-5 text-blue-600" /> 我的收藏
+          <div className="relative w-full max-w-md bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800 h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+            <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/50">
+              <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                <Save className="w-5 h-5 text-zinc-900 dark:text-white" /> 我的收藏
               </h2>
-              <button onClick={() => setShowFavorites(false)} className="p-2 hover:bg-gray-200 rounded-full">
+              <button onClick={() => setShowFavorites(false)} className="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-full text-zinc-500 dark:text-zinc-400">
                 <X className="w-5 h-5" />
               </button>
             </div>
             
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {favorites.length === 0 ? (
-                <div className="text-center text-gray-400 py-10">
+                <div className="text-center text-zinc-400 dark:text-zinc-600 py-10">
                   暫無收藏內容
                 </div>
               ) : (
@@ -223,21 +228,21 @@ export default function Home() {
                   <div 
                     key={item.id}
                     onClick={() => handleLoadFavorite(item)}
-                    className="group bg-white border border-gray-200 rounded-xl p-4 hover:border-blue-400 hover:shadow-md transition cursor-pointer relative"
+                    className="group bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 hover:border-zinc-400 dark:hover:border-zinc-600 hover:shadow-md transition cursor-pointer relative"
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-mono text-gray-400 bg-gray-100 px-2 py-1 rounded">
+                      <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded">
                         {new Date(item.timestamp).toLocaleDateString()}
                       </span>
                       <button 
                         onClick={(e) => handleDeleteFavorite(item.id, e)}
-                        className="text-gray-400 hover:text-red-500 p-1 rounded opacity-0 group-hover:opacity-100 transition"
+                        className="text-zinc-400 hover:text-red-500 p-1 rounded opacity-0 group-hover:opacity-100 transition"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                    <p className="font-medium text-gray-800 line-clamp-2 mb-2">{item.source}</p>
-                    <p className="text-xs text-gray-500 line-clamp-1">
+                    <p className="font-medium text-zinc-800 dark:text-zinc-200 line-clamp-2 mb-2">{item.source}</p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1">
                        {item.context ? `[${item.context}]` : '[無背景]'} • {item.result.zh.substring(0, 20)}...
                     </p>
                   </div>
@@ -254,13 +259,11 @@ export default function Home() {
           {/* 左側：輸入區 (佔 5/12) */}
           <div className="lg:col-span-5 space-y-6">
             
-            {/* 移除原本的 API Key 設定區塊 */}
-
             {/* 翻譯輸入 */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-fit">
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 h-fit">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                     產業背景 / 上下文
                   </label>
                   <input
@@ -268,26 +271,26 @@ export default function Home() {
                     value={industryContext}
                     onChange={(e) => setIndustryContext(e.target.value)}
                     placeholder="例如：醫學、法律、遊戲在地化..."
-                    className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none transition"
+                    className="w-full p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 outline-none transition text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                     欲翻譯內容
                   </label>
                   <textarea
                     value={sourceText}
                     onChange={(e) => setSourceText(e.target.value)}
                     placeholder="請輸入中文、英文或日文..."
-                    className="w-full h-48 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
+                    className="w-full h-48 p-3 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 outline-none transition resize-none text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600"
                   />
                 </div>
 
                 <button
                   onClick={handleTranslate}
                   disabled={isLoading || !sourceText}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
                 >
                   {isLoading ? (
                     <>
@@ -306,14 +309,14 @@ export default function Home() {
           {/* 右側：輸出區 (佔 7/12) */}
           <div className="lg:col-span-7 space-y-6">
             {!translations && !isLoading && (
-              <div className="h-full flex flex-col items-center justify-center text-gray-400 min-h-[400px] bg-white rounded-xl border border-dashed border-gray-300">
+              <div className="h-full flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-600 min-h-[400px] bg-white dark:bg-zinc-900 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700">
                 <Book className="w-12 h-12 mb-4 opacity-20" />
                 <p>輸入內容並開始翻譯，結果將顯示於此</p>
               </div>
             )}
 
             {isLoading && (
-              <div className="h-full flex flex-col items-center justify-center text-gray-400 min-h-[400px] bg-white rounded-xl border border-dashed border-gray-300">
+              <div className="h-full flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-600 min-h-[400px] bg-white dark:bg-zinc-900 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700">
                  <span className="animate-pulse">正在思考翻譯與術語解釋...</span>
               </div>
             )}
@@ -322,11 +325,11 @@ export default function Home() {
               <>
                 <UnifiedResultCard data={translations} />
                 
-                <div className="bg-amber-50 p-6 rounded-xl border border-amber-100">
-                  <h3 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
+                <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
                     <Book className="w-5 h-5" /> 名詞解釋 & 背景知識
                   </h3>
-                  <div className="prose prose-amber max-w-none whitespace-pre-wrap text-gray-800">
+                  <div className="prose prose-zinc dark:prose-invert max-w-none whitespace-pre-wrap text-zinc-800 dark:text-zinc-300 leading-relaxed">
                     {translations.terms}
                   </div>
                 </div>
@@ -334,7 +337,7 @@ export default function Home() {
                 <div className="flex justify-end pt-4">
                   <button 
                     onClick={handleSaveFavorite}
-                    className="flex items-center gap-2 bg-gray-800 text-white px-6 py-2 rounded-full hover:bg-gray-700 transition shadow-lg active:scale-95"
+                    className="flex items-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-6 py-2 rounded-full hover:bg-zinc-800 dark:hover:bg-zinc-200 transition shadow-lg active:scale-95 font-medium"
                   >
                     <Save className="w-4 h-4" /> 加入收藏
                   </button>
@@ -369,19 +372,19 @@ function UnifiedResultCard({ data }: { data: TranslationData }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition min-h-[200px]">
+    <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 hover:shadow-md transition min-h-[200px]">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">翻譯結果</h3>
+        <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">翻譯結果</h3>
         
         {/* 右上角控制區：Tabs + Copy */}
-        <div className="flex items-center gap-3 bg-gray-50 p-1 rounded-lg border border-gray-200">
+        <div className="flex items-center gap-3 bg-zinc-100 dark:bg-zinc-800 p-1 rounded-lg border border-zinc-200 dark:border-zinc-700">
           <div className="flex gap-1">
             <button
               onClick={() => setActiveTab('zh')}
               className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
                 activeTab === 'zh' 
-                  ? 'bg-white text-blue-600 shadow-sm' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm' 
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
               }`}
             >
               繁體中文
@@ -390,8 +393,8 @@ function UnifiedResultCard({ data }: { data: TranslationData }) {
               onClick={() => setActiveTab('en')}
               className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
                 activeTab === 'en' 
-                  ? 'bg-white text-blue-600 shadow-sm' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm' 
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
               }`}
             >
               English
@@ -400,17 +403,17 @@ function UnifiedResultCard({ data }: { data: TranslationData }) {
               onClick={() => setActiveTab('ja')}
               className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
                 activeTab === 'ja' 
-                  ? 'bg-white text-blue-600 shadow-sm' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm' 
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
               }`}
             >
               日本語
             </button>
           </div>
-          <div className="w-px h-4 bg-gray-300 mx-1"></div>
+          <div className="w-px h-4 bg-zinc-300 dark:bg-zinc-600 mx-1"></div>
           <button 
             onClick={handleCopy}
-            className="text-gray-400 hover:text-blue-600 transition p-1 mr-1"
+            className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition p-1 mr-1"
             title="複製當前內容"
           >
             {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
@@ -418,7 +421,7 @@ function UnifiedResultCard({ data }: { data: TranslationData }) {
         </div>
       </div>
       
-      <div className="text-lg text-gray-800 leading-relaxed whitespace-pre-wrap animate-in fade-in duration-300 key={activeTab}">
+      <div className="text-lg text-zinc-800 dark:text-zinc-100 leading-relaxed whitespace-pre-wrap animate-in fade-in duration-300 key={activeTab}">
         {getContent()}
       </div>
     </div>
