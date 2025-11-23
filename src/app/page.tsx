@@ -181,9 +181,6 @@ export default function Home() {
                  </label>
                  <input
                   type="password"
-                  inputMode="text"
-                  autoComplete="off"
-                  autoCorrect="off"
                   value={apiKey}
                   onChange={handleApiKeyChange}
                   placeholder="sk-..."
@@ -273,9 +270,6 @@ export default function Home() {
                 </label>
                 <input
                   type="text"
-                  inputMode="text"
-                  autoComplete="off"
-                  autoCorrect="off"
                   value={industryContext}
                   onChange={(e) => setIndustryContext(e.target.value)}
                   placeholder="例如：醫學、法律、遊戲在地化..."
@@ -288,9 +282,6 @@ export default function Home() {
                   欲翻譯內容
                 </label>
                 <textarea
-                  inputMode="text"
-                  autoComplete="off"
-                  autoCorrect="off"
                   value={sourceText}
                   onChange={(e) => setSourceText(e.target.value)}
                   placeholder="請輸入中文、英文或日文..."

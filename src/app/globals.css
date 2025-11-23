@@ -28,9 +28,3 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-/* Minimal PWA Reset */
-input, textarea, select, button {
-  /* Ensure standard touch behavior */
-  touch-action: manipulation;
-}
